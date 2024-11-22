@@ -17,6 +17,16 @@ import {
 
 const ITEMS_PER_PAGE = 10;
 
+interface Weakness {
+  type: string;
+  value: string;
+}
+
+interface Resistance {
+  type: string;
+  value: string;
+}
+
 function App() {
   const [search, setSearch] = useState<string>("");
   const [cards, setCards] = useState<
@@ -25,7 +35,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
   const [detailedCard, setDetailedCard] = useState<
-    { id: string; name: string; images: { large: string }; attacks?: { name: string; cost: string[] }[];[key: string]: any } | null
+    { id: string; name: string; images: { large: string }; attacks?: { name: string; damage: string; text: string; cost: string[] }[]; hp?: string; types?: string[]; weaknesses?: Weakness[]; resistances?: Resistance[]; retreatCost?: string[]; evolvesTo?: string[]; artist?: string; flavorText?: string; cardmarket?: { prices?: { averageSellPrice?: number } } } | null
   >(null);
   const [drawerLoading, setDrawerLoading] = useState<boolean>(false);
   const [totalCards, setTotalCards] = useState<number>(0);
@@ -157,6 +167,11 @@ function App() {
                   />
                   <div className="space-y-2 w-full">
                     <p className="text-sm">
+                      <span className="font-bold">Points de vie (HP):</span> {detailedCard?.attacks?.map((attaks) => (
+                        <p>{attaks.name} : <span className="font-bold">{attaks.damage}</span> - {attaks.text}</p>
+                      )) || "Non spécifié"}
+                    </p>
+                    <p className="text-sm">
                       <span className="font-bold">Points de vie (HP):</span> {detailedCard?.hp || "Non spécifié"}
                     </p>
                     <p className="text-sm">
@@ -164,11 +179,11 @@ function App() {
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Faiblesses:</span>{" "}
-                      {detailedCard?.weaknesses?.map(w => `${w.type} (${w.value})`).join(", ") || "Aucune"}
+                      {detailedCard?.weaknesses?.map((w: Weakness) => `${w.type} (${w.value})`).join(", ") || "Aucune"}
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Résistances:</span>{" "}
-                      {detailedCard?.resistances?.map(r => `${r.type} (${r.value})`).join(", ") || "Aucune"}
+                      {detailedCard?.resistances?.map((r: Resistance) => `${r.type} (${r.value})`).join(", ") || "Aucune"}
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Coût de retraite:</span>{" "}

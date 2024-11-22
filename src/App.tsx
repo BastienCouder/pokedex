@@ -107,7 +107,7 @@ function App() {
         }
     }, [])
 
-    let handlePageChange = useCallback(
+    const handlePageChange = useCallback(
         (page: number) => {
             fetchPokemonCards(page)
         },

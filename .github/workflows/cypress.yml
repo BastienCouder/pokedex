@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: E2E Tests Workflow
 
 on:
     push:
@@ -42,3 +42,10 @@ jobs:
                   start: npm run dev
                   wait-on: http://localhost:5173
                   browser: chrome
+
+            # Sauvegarder les vidéos
+            - name: Upload Cypress artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: cypress-artifacts
+                  path: cypress/videos/

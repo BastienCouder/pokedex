@@ -30,13 +30,35 @@ interface Resistance {
 function App() {
   const [search, setSearch] = useState<string>("");
   const [cards, setCards] = useState<
-    { id: string; name: string; images: { large: string }; attacks?: { name: string; damage: string; text: string; cost: string[] }[] }[]
+    {
+      id: string;
+      name: string;
+      images: { large: string };
+      attacks?: {
+        name: string;
+        damage: string;
+        text: string;
+        cost: string[];
+      }[];
+    }[]
   >([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [detailedCard, setDetailedCard] = useState<
-    { id: string; name: string; images: { large: string }; attacks?: { name: string; damage: string; text: string; cost: string[] }[]; hp?: string; types?: string[]; weaknesses?: Weakness[]; resistances?: Resistance[]; retreatCost?: string[]; evolvesTo?: string[]; artist?: string; flavorText?: string; cardmarket?: { prices?: { averageSellPrice?: number } } } | null
-  >(null);
+  const [detailedCard, setDetailedCard] = useState<{
+    id: string;
+    name: string;
+    images: { large: string };
+    attacks?: { name: string; damage: string; text: string; cost: string[] }[];
+    hp?: string;
+    types?: string[];
+    weaknesses?: Weakness[];
+    resistances?: Resistance[];
+    retreatCost?: string[];
+    evolvesTo?: string[];
+    artist?: string;
+    flavorText?: string;
+    cardmarket?: { prices?: { averageSellPrice?: number } };
+  } | null>(null);
   const [drawerLoading, setDrawerLoading] = useState<boolean>(false);
   const [totalCards, setTotalCards] = useState<number>(0);
   const [searched, setSearched] = useState<boolean>(false);
@@ -51,7 +73,7 @@ function App() {
       setLoading(true);
       try {
         const response = await fetch(
-          `https://api.pokemontcg.io/v2/cards?q=name:${search}&pageSize=${ITEMS_PER_PAGE}&page=${page}`
+          `https://api.pokemontcg.io/v2/cards?q=name:${search}&pageSize=${ITEMS_PER_PAGE}&page=${page}`,
         );
         const data = await response.json();
 
@@ -59,12 +81,15 @@ function App() {
         setSearched(true);
         setTotalCards(data.totalCount || 0);
       } catch (error) {
-        console.error("Erreur lors de la récupération des cartes Pokémon:", error);
+        console.error(
+          "Erreur lors de la récupération des cartes Pokémon:",
+          error,
+        );
       } finally {
         setLoading(false);
       }
     },
-    [search]
+    [search],
   );
 
   const fetchCardDetails = useCallback(async (id: string) => {
@@ -75,15 +100,21 @@ function App() {
       setDetailedCard(data.data);
       console.log(data.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des détails de la carte:", error);
+      console.error(
+        "Erreur lors de la récupération des détails de la carte:",
+        error,
+      );
     } finally {
       setDrawerLoading(false);
     }
   }, []);
 
-  const handlePageChange = useCallback((page: number) => {
-    fetchPokemonCards(page);
-  }, [fetchPokemonCards]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      fetchPokemonCards(page);
+    },
+    [fetchPokemonCards],
+  );
 
   useEffect(() => {
     if (selectedCardId) {
@@ -91,7 +122,10 @@ function App() {
     }
   }, [selectedCardId, fetchCardDetails]);
 
-  const totalPages = useMemo(() => Math.ceil(totalCards / ITEMS_PER_PAGE), [totalCards]);
+  const totalPages = useMemo(
+    () => Math.ceil(totalCards / ITEMS_PER_PAGE),
+    [totalCards],
+  );
 
   return (
     <div className="w-full justify-center p-6 font-sans">
@@ -108,27 +142,36 @@ function App() {
         </Button>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {loading
-          ? Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+        {loading ? (
+          Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
             <Skeleton key={index} className="w-full h-96" />
           ))
-          : cards.length > 0 ? (
-            cards.map((card) => (
-              <div key={card.id} onClick={() => setSelectedCardId(card.id)} className="relative w-full h-[400px] transform-style-3d duration-700 cursor-pointer">
-                <div className="face-front">
-                  <img
-                    src={card.images.large}
-                    alt={card.name}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
-                <div className="face-back rounded-lg h-full">
-                  <img src='/img/pokemon_back_card.png' alt="pokemon_back_card" className="h-full" />
-                </div>
+        ) : cards.length > 0 ? (
+          cards.map((card) => (
+            <div
+              key={card.id}
+              onClick={() => setSelectedCardId(card.id)}
+              className="relative w-full h-[400px] transform-style-3d duration-700 cursor-pointer"
+            >
+              <div className="face-front">
+                <img
+                  src={card.images.large}
+                  alt={card.name}
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
-            ))) : searched ? (
-              <p className="text-center text-gray-500">il n’y a pas de résultat</p>
-            ) : null}
+              <div className="face-back rounded-lg h-full">
+                <img
+                  src="/img/pokemon_back_card.png"
+                  alt="pokemon_back_card"
+                  className="h-full"
+                />
+              </div>
+            </div>
+          ))
+        ) : searched ? (
+          <p className="text-center text-gray-500">il n’y a pas de résultat</p>
+        ) : null}
       </div>
       {totalCards > ITEMS_PER_PAGE && (
         <div className="flex justify-center mt-6">
@@ -141,16 +184,22 @@ function App() {
         </div>
       )}
       {selectedCardId && (
-        <Drawer open={!!selectedCardId} onOpenChange={() => setSelectedCardId(null)}>
+        <Drawer
+          open={!!selectedCardId}
+          onOpenChange={() => setSelectedCardId(null)}
+        >
           <DrawerContent className="w-full flex flex-col items-center p-6">
             <DrawerHeader>
               {drawerLoading ? (
                 <Skeleton className="h-8 w-40" />
               ) : (
                 <>
-                  <DrawerTitle className="text-xl text-center font-bold">{detailedCard?.name || "Détails de la carte"}</DrawerTitle>
+                  <DrawerTitle className="text-xl text-center font-bold">
+                    {detailedCard?.name || "Détails de la carte"}
+                  </DrawerTitle>
                   <DrawerDescription className=" text-center text-sm text-gray-500">
-                    {detailedCard?.flavorText || "Pas de description disponible."}
+                    {detailedCard?.flavorText ||
+                      "Pas de description disponible."}
                   </DrawerDescription>
                 </>
               )}
@@ -167,23 +216,34 @@ function App() {
                   />
                   <div className="space-y-2 w-full">
                     <p className="text-sm">
-                      <span className="font-bold">Points de vie (HP):</span> {detailedCard?.attacks?.map((attaks) => (
-                        <p>{attaks.name} : <span className="font-bold">{attaks.damage}</span> - {attaks.text}</p>
+                      <span className="font-bold">Points de vie (HP):</span>{" "}
+                      {detailedCard?.attacks?.map((attaks) => (
+                        <p>
+                          {attaks.name} :{" "}
+                          <span className="font-bold">{attaks.damage}</span> -{" "}
+                          {attaks.text}
+                        </p>
                       )) || "Non spécifié"}
                     </p>
                     <p className="text-sm">
-                      <span className="font-bold">Points de vie (HP):</span> {detailedCard?.hp || "Non spécifié"}
+                      <span className="font-bold">Points de vie (HP):</span>{" "}
+                      {detailedCard?.hp || "Non spécifié"}
                     </p>
                     <p className="text-sm">
-                      <span className="font-bold">Type(s):</span> {detailedCard?.types?.join(", ") || "Non spécifié"}
+                      <span className="font-bold">Type(s):</span>{" "}
+                      {detailedCard?.types?.join(", ") || "Non spécifié"}
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Faiblesses:</span>{" "}
-                      {detailedCard?.weaknesses?.map((w: Weakness) => `${w.type} (${w.value})`).join(", ") || "Aucune"}
+                      {detailedCard?.weaknesses
+                        ?.map((w: Weakness) => `${w.type} (${w.value})`)
+                        .join(", ") || "Aucune"}
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Résistances:</span>{" "}
-                      {detailedCard?.resistances?.map((r: Resistance) => `${r.type} (${r.value})`).join(", ") || "Aucune"}
+                      {detailedCard?.resistances
+                        ?.map((r: Resistance) => `${r.type} (${r.value})`)
+                        .join(", ") || "Aucune"}
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Coût de retraite:</span>{" "}
@@ -194,7 +254,8 @@ function App() {
                       {detailedCard?.evolvesTo?.join(", ") || "Non spécifié"}
                     </p>
                     <p className="text-sm">
-                      <span className="font-bold">Artiste:</span> {detailedCard?.artist || "Non spécifié"}
+                      <span className="font-bold">Artiste:</span>{" "}
+                      {detailedCard?.artist || "Non spécifié"}
                     </p>
                     <div className="text-sm space-y-1">
                       <p>
@@ -203,7 +264,6 @@ function App() {
                           ? `${detailedCard.cardmarket.prices.averageSellPrice} €`
                           : "Non spécifié"}
                       </p>
-
                     </div>
                   </div>
                 </>
@@ -217,7 +277,6 @@ function App() {
           </DrawerContent>
         </Drawer>
       )}
-
     </div>
   );
 }

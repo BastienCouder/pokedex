@@ -11,6 +11,7 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
       - name: Build project
         run: pnpm build
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }}"

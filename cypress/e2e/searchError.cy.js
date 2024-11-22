@@ -8,7 +8,7 @@ describe("Gestion des recherches infructueuses", () => {
     cy.contains("button", "Chercher").click();
 
     cy.contains("il n’y a pas de résultat", { timeout: 10000 }).should(
-      "be.visible"
+      "be.visible",
     );
   });
 });

@@ -12,7 +12,7 @@ describe("Recherche de cartes Pokémon", () => {
 
     cy.get(".grid .group", { timeout: 10000 }).should(
       "have.length.greaterThan",
-      0
+      0,
     );
   });
 });

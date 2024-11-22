@@ -44,7 +44,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border bg-background text-foreground;
@@ -62,7 +61,6 @@
 .transform-style-3d:hover {
   transform: rotateY(180deg);
   transform-style: preserve-3d;
-
 }
 
 .backface-hidden {

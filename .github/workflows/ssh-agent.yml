@@ -23,8 +23,8 @@ jobs:
 
             # Mettre à jour le fichier known_hosts
             - name: Add Known Hosts
-              run: ssh-keyscan -H 51.75.18.60 ~/.ssh/known_hosts
+              run: ssh-keyscan -H 51.75.18.60 >> ~/.ssh/known_hosts
 
             # Exécuter la commande "ls" sur le serveur distant
             - name: Execute remote command
-              run: ssh debian@51.75.18.60 ls
+              run: ssh debian@51.75.18.60 'ls'

@@ -1,0 +1,39 @@
+name: Cypress E2E Tests
+
+# Ce workflow s'exécute sur les push et pull requests vers la branche "main"
+on:
+    workflow_run:
+        workflows:
+            - Build Workflow
+        types:
+            - completed
+
+jobs:
+    e2e:
+        runs-on: windows-latest
+
+        steps:
+            # Checkout du code source depuis le dépôt GitHub
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Configuration de l'environnement Node.js avec mise en cache des dépendances
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: 'npm'
+
+            # Installation des dépendances avec npm
+            - name: Install dependencies
+              run: npm ci
+
+            # Démarrage de l'application en arrière-plan pour les tests
+            - name: Start application
+              run: npm start &
+              env:
+                  NODE_ENV: test
+
+            #  Attente que l'application soit accessible
+            - name: Wait for the app to be ready
+              run: npx wait-on http://localhost:5173

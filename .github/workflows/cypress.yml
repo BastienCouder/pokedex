@@ -37,11 +37,7 @@ jobs:
 
             # Exécuter les tests Cypress
             - name: Run Cypress tests
-              uses: cypress-io/github-action@v5
-              with:
-                  start: npm run dev
-                  wait-on: http://localhost:5173
-                  browser: chrome
+              run: npx cypress run --browser chrome
 
             # Sauvegarder les vidéos
             - name: Upload Cypress artifacts

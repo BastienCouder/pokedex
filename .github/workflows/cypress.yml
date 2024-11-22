@@ -1,7 +1,7 @@
 name: E2E Tests Workflow
 
 # Déclencheur : Ce workflow s'exécute sur les push et pull requests
-on: [push, pull_request]
+on: [push]
 
 jobs:
     e2e-tests:

@@ -6,5 +6,9 @@ describe('Gestion des recherches infructueuses', () => {
 
         cy.get('input[placeholder="Rechercher un Pokémon"]').type('xyzzy')
         cy.contains('button', 'Chercher').click()
+
+        cy.contains('il n’y a pas de résultat', { timeout: 50000 }).should(
+            'be.visible'
+        )
     })
 })

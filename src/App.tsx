@@ -14,18 +14,9 @@ import {
   DrawerFooter,
   DrawerClose,
 } from "./components/ui/drawer";
+import { Card, Resistance, Weakness } from "./types";
 
 const ITEMS_PER_PAGE = 10;
-
-interface Weakness {
-  type: string;
-  value: string;
-}
-
-interface Resistance {
-  type: string;
-  value: string;
-}
 
 function App() {
   const [search, setSearch] = useState<string>("");
@@ -135,7 +126,9 @@ function App() {
           inputSize={"sm"}
           placeholder="Rechercher un Pokémon"
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+            setSearch(event.target.value)
+          }
         />
         <Button size={"sm"} onClick={() => fetchPokemonCards(1)}>
           Chercher
@@ -147,7 +140,7 @@ function App() {
             <Skeleton key={index} className="w-full h-96" />
           ))
         ) : cards.length > 0 ? (
-          cards.map((card) => (
+          cards.map((card: Card) => (
             <div
               key={card.id}
               onClick={() => setSelectedCardId(card.id)}
@@ -217,13 +210,19 @@ function App() {
                   <div className="space-y-2 w-full">
                     <p className="text-sm">
                       <span className="font-bold">Points de vie (HP):</span>{" "}
-                      {detailedCard?.attacks?.map((attaks) => (
-                        <p>
-                          {attaks.name} :{" "}
-                          <span className="font-bold">{attaks.damage}</span> -{" "}
-                          {attaks.text}
-                        </p>
-                      )) || "Non spécifié"}
+                      {detailedCard?.attacks?.map(
+                        (attacks: {
+                          name: string;
+                          damage: string;
+                          text: string;
+                        }) => (
+                          <p key={attacks.name}>
+                            {attacks.name} :{" "}
+                            <span className="font-bold">{attacks.damage}</span>{" "}
+                            - {attacks.text}
+                          </p>
+                        ),
+                      ) || "Non spécifié"}
                     </p>
                     <p className="text-sm">
                       <span className="font-bold">Points de vie (HP):</span>{" "}

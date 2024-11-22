@@ -10,16 +10,13 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
 
-      - name: Install pnpm
-        run: npm install -g pnpm
-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Run ESLint
-        run: pnpm lint
+        run: npm run lint
 
       - name: Build project
-        run: pnpm build
+        run: npm run build
 
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }}"

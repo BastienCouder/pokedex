@@ -8,7 +8,7 @@ on:
 
 jobs:
     e2e-tests:
-        runs-on: ubuntu-latest
+        runs-on: windows-latest
 
         steps:
             # Checkout du code source depuis le dépôt GitHub
@@ -25,17 +25,17 @@ jobs:
             - name: Install dependencies
               run: npm install
 
-            # 4. Démarrer le serveur
+            #  Démarrer le serveur
             - name: Start Vite server
               run: npm run dev &
               env:
                   CI: true
 
-            # 5. Attendre que le serveur soit prêt
+            # Attendre que le serveur soit prêt
             - name: Wait for Vite server to be ready
               run: npx wait-on http://localhost:5173
 
-            # 6. Exécuter les tests Cypress
+            # Exécuter les tests Cypress
             - name: Run Cypress tests
               uses: cypress-io/github-action@v5
               with:

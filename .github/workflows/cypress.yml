@@ -31,7 +31,9 @@ jobs:
 
             # Démarrage de l'application en arrière-plan pour les tests
             - name: Start application
-              run: npm run dev
+              run: npm run dev &
+              env:
+                  NODE_ENV: test
 
             #  Attente que l'application soit accessible
             - name: Wait for the app to be ready

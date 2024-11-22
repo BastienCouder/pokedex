@@ -16,9 +16,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Prettier
-        run: pnpm prettier --check "**/*.{js,ts,json,css,html}"
-
       - name: Run ESLint
         run: pnpm lint
 

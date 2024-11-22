@@ -69,6 +69,7 @@ function App() {
         setSearched(false);
         return;
       }
+
       setLoading(true);
       try {
         const response = await fetch(

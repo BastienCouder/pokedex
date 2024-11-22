@@ -1,13 +1,7 @@
 name: Cypress E2E Tests
 
 # Ce workflow s'exécute sur les push et pull requests vers la branche "main"
-on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+on: push
 
 jobs:
     e2e:
@@ -25,15 +19,16 @@ jobs:
                   node-version: 20
                   cache: 'npm'
 
+            - name: Cypress run
+              uses: cypress-io/github-action@v6
+
             # Installation des dépendances avec npm
             - name: Install dependencies
               run: npm ci
 
             # Démarrage de l'application en arrière-plan pour les tests
             - name: Start application
-              run: npm start &
-              env:
-                  NODE_ENV: test
+              run: npm run dev
 
             #  Attente que l'application soit accessible
             - name: Wait for the app to be ready

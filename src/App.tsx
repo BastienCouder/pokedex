@@ -19,7 +19,7 @@ import { Card, Resistance, Weakness } from './types'
 const ITEMS_PER_PAGE = 10
 
 function App() {
-    const [search, setSearch] = useState<string>('test')
+    const [search, setSearch] = useState<string>('')
     const [cards, setCards] = useState<
         {
             id: string

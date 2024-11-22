@@ -1,46 +1,44 @@
-name: Cypress E2E Tests
+name: CI/CD Pipeline
 
-# Ce workflow s'exécute sur les push et pull requests vers la branche "main"
 on:
     push:
         branches:
             - main
     pull_request:
-        branches:
-            - main
 
 jobs:
-    e2e:
-        runs-on: windows-latest
+    e2e-tests:
+        runs-on: ubuntu-latest
 
         steps:
             # Checkout du code source depuis le dépôt GitHub
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v3
 
-            # Configuration de l'environnement Node.js avec mise en cache des dépendances
+            #  Configuration de l'environnement Node.js avec mise en cache des dépendances
             - name: Set up Node.js
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v3
               with:
-                  node-version: 20
-                  cache: 'npm'
+                  node-version: '16'
 
             # Installation des dépendances avec npm
             - name: Install dependencies
-              run: npm ci
+              run: npm install
 
-            # Démarrage de l'application en arrière-plan pour les tests
-            - name: Start application
+            # 4. Démarrer le serveur
+            - name: Start Vite server
               run: npm run dev &
               env:
-                  NODE_ENV: test
+                  CI: true
 
-            #  Attente que l'application soit accessible
-            - name: Wait for the app to be ready
-              run: npx wait-on http://localhost:5173
+            # 5. Attendre que le serveur soit prêt
+            - name: Wait for Vite server to be ready
+              run: npx wait-on http://localhost:3000
 
-            # Exécution des tests Cypress
+            # 6. Exécuter les tests Cypress
             - name: Run Cypress tests
-              uses: cypress-io/github-action@v6
+              uses: cypress-io/github-action@v5
               with:
+                  start: npm run dev
+                  wait-on: http://localhost:3000
                   browser: chrome

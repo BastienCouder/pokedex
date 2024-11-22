@@ -2,11 +2,12 @@ name: Cypress E2E Tests
 
 # Ce workflow s'exécute sur les push et pull requests vers la branche "main"
 on:
-    workflow_run:
-        workflows:
-            - Build Workflow
-        types:
-            - completed
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 
 jobs:
     e2e:

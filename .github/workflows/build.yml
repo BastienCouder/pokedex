@@ -10,7 +10,7 @@ on:
             - main
 jobs:
     build:
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
         steps:
             # Checkout du code source depuis le dépôt GitHub
             - name: Git checkout

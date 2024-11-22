@@ -8,7 +8,7 @@ on:
 
 jobs:
     e2e-tests:
-        runs-on: windows-latest
+        runs-on: ubuntu-latest
 
         steps:
             # Checkout du code source depuis le dépôt GitHub
@@ -23,10 +23,10 @@ jobs:
 
             # Installation des dépendances avec npm
             - name: Install dependencies
-              run: npm install
+              run: npm ci
 
             #  Démarrer le serveur
-            - name: Start Vite server
+            - name: Start server
               run: npm run dev &
               env:
                   CI: true

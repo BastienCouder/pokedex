@@ -27,4 +27,4 @@ jobs:
 
             # Exécuter la commande "ls" sur le serveur distant
             - name: Execute remote command
-              run: ssh debian@51.75.18.60 'ls'
+              run: ssh debian@51.75.18.60 ls

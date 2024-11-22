@@ -35,3 +35,13 @@ jobs:
             # Transférer les fichiers via SCP
             - name: Deploy files via SCP
               run: scp -r dist/* debian@51.75.18.60:/home/debian/
+
+            # Déplacer les fichiers au bon endroit sur le serveur
+            - name: Move files to /var/www/html/pokedex
+              run: |
+                  ssh debian@51.75.18.60 "
+                  sudo rm -rf /var/www/html/pokedex/* && \
+                  sudo mv /home/debian/* /var/www/html/pokedex/ && \
+                  sudo chown -R www-data:www-data /var/www/html/pokedex/ && \
+                  sudo chmod -R 755 /var/www/html/pokedex/
+                  "

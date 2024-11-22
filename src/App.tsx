@@ -17,7 +17,6 @@ import {
 import { Card, Resistance, Weakness } from './types'
 
 const ITEMS_PER_PAGE = 10
-const apiKey = import.meta.env.VITE_API_KEY
 
 function App() {
     const [search, setSearch] = useState<string>('')
@@ -70,7 +69,7 @@ function App() {
             setLoading(true)
             try {
                 const response = await fetch(
-                    `${apiKey}/cards?q=name:${search}&pageSize=${ITEMS_PER_PAGE}&page=${page}`
+                    `https://api.pokemontcg.io/v2/cards?q=name:${search}&pageSize=${ITEMS_PER_PAGE}&page=${page}`
                 )
                 const data = await response.json()
 
@@ -92,7 +91,9 @@ function App() {
     const fetchCardDetails = useCallback(async (id: string) => {
         setDrawerLoading(true)
         try {
-            const response = await fetch(`${apiKey}/cards/${id}`)
+            const response = await fetch(
+                `https://api.pokemontcg.io/v2/cards/${id}`
+            )
             const data = await response.json()
             setDetailedCard(data.data)
             console.log(data.data)

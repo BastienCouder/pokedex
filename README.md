@@ -1,5 +1,7 @@
 # CI/CD Pokedex
 
+https://pokedex.bastiencouder.com/
+
 ## Description
 
 Ce dépôt contient un projet Pokedex Pokémon développé en Node.js et configuré avec GitHub Actions pour implémenter un pipeline CI/CD robuste. L’objectif est d’assurer une intégration continue et un déploiement fiable, tout en garantissant la qualité et la stabilité de l’application via des tests automatisés.

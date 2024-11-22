@@ -33,12 +33,12 @@ jobs:
 
             # 5. Attendre que le serveur soit prêt
             - name: Wait for Vite server to be ready
-              run: npx wait-on http://localhost:3000
+              run: npx wait-on http://localhost:5173
 
             # 6. Exécuter les tests Cypress
             - name: Run Cypress tests
               uses: cypress-io/github-action@v5
               with:
                   start: npm run dev
-                  wait-on: http://localhost:3000
+                  wait-on: http://localhost:5173
                   browser: chrome

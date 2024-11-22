@@ -69,7 +69,6 @@ function App() {
         setSearched(false);
         return;
       }
-
       setLoading(true);
       try {
         const response = await fetch(
@@ -122,7 +121,7 @@ function App() {
     }
   }, [selectedCardId, fetchCardDetails]);
 
-  const totalPages = useMemo(
+  let totalPages = useMemo(
     () => Math.ceil(totalCards / ITEMS_PER_PAGE),
     [totalCards],
   );

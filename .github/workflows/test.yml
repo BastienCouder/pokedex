@@ -4,4 +4,11 @@ jobs:
   test:
     runs-on: windows-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }}"
+      - name: Git checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: pnpm ci
+      - name: Build project
+        run: pnpm build

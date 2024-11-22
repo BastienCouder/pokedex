@@ -1,7 +1,7 @@
 name: GitHub Actions Demo
 on: [push]
 jobs:
-    test:
+    build:
         runs-on: windows-latest
         steps:
             - name: Git checkout

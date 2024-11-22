@@ -1,0 +1,37 @@
+name: Deploy to Server
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            #  Checkout du code source depuis le dépôt GitHub
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Installation des dépendances avec npm
+            - name: Install dependencies
+              run: npm ci
+
+            # Compilation du projet (build)
+            - name: Build project
+              run: npm run build
+
+            # Configuration de l'agent SSH
+            - name: Start SSH agent
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            # Ajouter le serveur aux known_hosts
+            - name: Add server to known_hosts
+              run: ssh-keyscan -H 151.80.58.182 >> ~/.ssh/known_hosts
+
+            # Transférer les fichiers via SCP
+            - name: Deploy files via SCP
+              run: scp -r dist/* debian@151.80.58.182:/home/debian/

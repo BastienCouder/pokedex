@@ -1,10 +1,7 @@
 name: SSH Agent Configuration and Remote Command
 
-on:
-    push:
-        branches:
-            - main
-    pull_request:
+# Déclencheur : Ce workflow s'exécute sur les push et pull requests
+on: [push, pull_request]
 
 jobs:
     ssh-job:

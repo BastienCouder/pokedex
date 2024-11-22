@@ -1,0 +1,27 @@
+name: SSH Agent Configuration and Remote Command
+
+# Déclencheur : Ce workflow s'exécute sur les push et pull requests
+on: [push]
+
+jobs:
+    ssh-job:
+        runs-on: ubuntu-latest
+
+        steps:
+            #  Checkout du code source depuis le dépôt GitHub
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Configuration de l'agent SSH
+            - name: Start SSH agent
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            # Mettre à jour le fichier known_hosts
+            - name: Add Known Hosts
+              run: ssh-keyscan -H 51.75.18.60 >> ~/.ssh/known_hosts
+
+            # Exécuter la commande "ls" sur le serveur distant
+            - name: Execute remote command
+              run: ssh debian@51.75.18.60 'ls'

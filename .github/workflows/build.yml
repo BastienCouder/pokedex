@@ -1,13 +1,7 @@
 name: Build Workflow
 
-# Déclencheur : Ce workflow s'exécute sur les push et pull requests vers la branche "main"
-on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+# Déclencheur : Ce workflow s'exécute sur les push et pull requests
+on: [push]
 jobs:
     build:
         runs-on: ubuntu-latest

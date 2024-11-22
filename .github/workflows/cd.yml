@@ -1,0 +1,47 @@
+name: Deploy to Server
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            #  Checkout du code source depuis le dépôt GitHub
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Installation des dépendances avec npm
+            - name: Install dependencies
+              run: npm ci
+
+            # Compilation du projet (build)
+            - name: Build project
+              run: npm run build
+
+            # Configuration de l'agent SSH
+            - name: Start SSH agent
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            # Ajouter le serveur aux known_hosts
+            - name: Add server to known_hosts
+              run: ssh-keyscan -H 51.75.18.60 >> ~/.ssh/known_hosts
+
+            # Transférer les fichiers via SCP
+            - name: Deploy files via SCP
+              run: scp -r dist/* debian@51.75.18.60:/home/debian/
+
+            # Déplacer les fichiers au bon endroit sur le serveur
+            - name: Move files to /var/www/html/pokedex
+              run: |
+                  ssh debian@51.75.18.60 "
+                  sudo rm -rf /var/www/html/pokedex/* && \
+                  sudo mv /home/debian/* /var/www/html/pokedex/ && \
+                  sudo chown -R www-data:www-data /var/www/html/pokedex/ && \
+                  sudo chmod -R 755 /var/www/html/pokedex/
+                  "

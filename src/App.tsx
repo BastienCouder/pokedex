@@ -120,7 +120,7 @@ function App() {
         }
     }, [selectedCardId, fetchCardDetails])
 
-    const totalPages = useMemo(
+    let totalPages = useMemo(
         () => Math.ceil(totalCards / ITEMS_PER_PAGE),
         [totalCards]
     )

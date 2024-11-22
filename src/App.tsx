@@ -107,7 +107,7 @@ function App() {
         }
     }, [])
 
-    const handlePageChange = useCallback(
+    let handlePageChange = useCallback(
         (page: number) => {
             fetchPokemonCards(page)
         },
@@ -120,7 +120,7 @@ function App() {
         }
     }, [selectedCardId, fetchCardDetails])
 
-    let totalPages = useMemo(
+    const totalPages = useMemo(
         () => Math.ceil(totalCards / ITEMS_PER_PAGE),
         [totalCards]
     )

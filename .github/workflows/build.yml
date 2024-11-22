@@ -1,31 +1,47 @@
-name: GitHub Actions Demo
-on: [push]
+name: Build Workflow
+
+# Déclencheur : Ce workflow s'exécute sur les push et pull requests vers la branche "main"
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 jobs:
     build:
         runs-on: windows-latest
         steps:
+            # Checkout du code source depuis le dépôt GitHub
             - name: Git checkout
               uses: actions/checkout@v4
 
+            # Configuration de l'environnement Node.js avec mise en cache des dépendances
             - name: Use Node.js
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: 'npm'
 
+            # Installation des dépendances avec npm
             - name: Install dependencies
               run: npm ci
 
+            #  Exécution de Prettier pour vérifier le formatage du code
             - name: Run Prettier
               run: npm run format
 
+            # Exécution d'ESLint pour vérifier la qualité du code
             - name: Run ESLint
               run: npm run lint
 
+            # Vérification des types TypeScript pour détecter les erreurs de typage
             - name: Check TypeScript types
               run: npm run type-check
 
+            # Compilation du projet (build)
             - name: Build project
               run: npm run build
 
+            #  Affichage d'un message confirmant le succès du job
             - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }}"

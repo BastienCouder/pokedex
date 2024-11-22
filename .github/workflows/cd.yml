@@ -22,11 +22,6 @@ jobs:
             - name: Build project
               run: npm run build
 
-            # Création du fichier .env
-            - name: Create .env file
-              run: |
-                  echo "API_KEY=${{ secrets.API_KEY }}" > .env
-
             # Configuration de l'agent SSH
             - name: Start SSH agent
               uses: webfactory/ssh-agent@v0.9.0

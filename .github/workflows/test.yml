@@ -19,6 +19,9 @@ jobs:
             - name: Run ESLint
               run: npm run lint
 
+            - name: Check TypeScript types
+              run: npm run type-check
+
             - name: Build project
               run: npm run build
 

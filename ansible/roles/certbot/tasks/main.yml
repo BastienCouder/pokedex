@@ -1,0 +1,14 @@
+---
+- name: Installer Certbot et les dépendances pour Nginx
+  apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+    update_cache: yes
+
+- name: Obtenir et installer le certificat SSL
+  command: >
+    certbot --nginx -n --agree-tos --redirect --email {{ ssl_email }}
+            -d {{ server_name }}
+  notify: reload nginx

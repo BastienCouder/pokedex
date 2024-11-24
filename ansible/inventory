@@ -1,0 +1,2 @@
+[web]
+51.75.18.60 ansible_ssh_user=debian

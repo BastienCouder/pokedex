@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    server_name {{ server_name }};
+
+    root {{ document_root }};
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    error_page 404 /404.html;
+
+    access_log /var/log/nginx/{{ server_name }}.access.log;
+    error_log /var/log/nginx/{{ server_name }}.error.log;
+}

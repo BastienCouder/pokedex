@@ -1,0 +1,80 @@
+name: Deploy to Server
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout du code source
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+              # Exporter la clé API
+            - name: Export API Key
+              run: echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
+
+              # Vérifier si API_KEY est définie
+            - name: Check API Key
+              run: |
+                  if [ -z "$API_KEY" ]; then
+                    echo "API_KEY is not set"
+                    exit 1
+                  else
+                    echo "API_KEY is set but hidden for security"
+                  fi
+
+            # Installer les dépendances npm
+            - name: Install dependencies
+              run: npm ci
+
+            # Build du projet
+            - name: Build project
+              env:
+                  VITE_API_KEY: ${{ secrets.API_KEY }}
+              run: npm run build
+
+            # Installer Ansible et SSH
+            - name: Install Ansible
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y ansible sshpass
+
+            # Configurer l'agent SSH
+            - name: Start SSH agent
+              uses: webfactory/ssh-agent@v0.9.0
+              with:
+                  ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+            # Ajouter le serveur aux known_hosts
+            - name: Add server to known_hosts
+              run: ssh-keyscan -H 51.75.18.60 >> ~/.ssh/known_hosts
+
+              # Créer le dossier sur le serveur avant le déploiement
+            - name: Create project directory on server
+              run: |
+                  ssh debian@51.75.18.60 "
+                  sudo mkdir -p /var/www/html/pokedex && \
+                  sudo chown -R debian:debian /var/www/html/pokedex
+                  "
+
+              # Transférer les fichiers via SCP
+            - name: Deploy files via SCP
+              run: scp -r dist/* debian@51.75.18.60:/var/www/html/pokedex/
+
+            # Définir les permissions et propriétaires
+            - name: Set permissions and ownership
+              run: |
+                  ssh debian@51.75.18.60 "
+                  sudo chown -R www-data:www-data /var/www/html/pokedex && \
+                  sudo chmod -R 755 /var/www/html/pokedex
+                  "
+
+            # Exécuter le playbook Ansible
+            - name: Run Ansible Playbook
+              run: |
+                  ansible-playbook -i ansible/inventory ansible/playbook.yml

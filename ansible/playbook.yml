@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  vars:
+      project_name: pokedex
+      server_name: pokedex.bastiencouder.com
+      document_root: /var/www/html/pokedex
+      ssl_email: bastien.couder@gmail.com
+  roles:
+      - nginx
+      - certbot

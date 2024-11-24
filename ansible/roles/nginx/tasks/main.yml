@@ -1,0 +1,30 @@
+---
+- name: Installer Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Activer le service Nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Créer le fichier de configuration pour le Vhost
+  template:
+    src: vhost.conf.j2
+    dest: /etc/nginx/sites-available/{{ server_name }}
+  notify: reload nginx
+
+- name: Activer le Vhost
+  file:
+    src: /etc/nginx/sites-available/{{ server_name }}
+    dest: /etc/nginx/sites-enabled/{{ server_name }}
+    state: link
+  notify: reload nginx
+
+- name: Vérifier la configuration Nginx
+  command: nginx -t
+  register: nginx_test
+  failed_when: nginx_test.rc != 0
